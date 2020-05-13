@@ -1,0 +1,30 @@
+# node-affinityは、node-selectorのより柔軟な一致判定ができる版。
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-node-affinity
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values:
+            - minikube
+      preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+          - key: kubernetes.io/hostname
+            operator: In
+            values:
+            - minikube
+  containers:
+  - name: nginx
+    image: nginx:alpine
+
+
+# kubernetes.io/hostnameの値にminukubeが含まれているnodeで起動する。
+# requiredDuringSchedulingIgnoredDuringExecution =　podスケジューリングの必須要件。

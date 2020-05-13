@@ -1,0 +1,3 @@
+### 起動
+  -  minikube start --kubernetes-version v1.18.0
+  

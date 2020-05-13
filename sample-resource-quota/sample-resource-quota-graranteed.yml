@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-rsq
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-rsq
+  template:
+    metadata:
+      labels:
+        app: nginx-rsq
+    spec:
+      containers:
+      - image: nginx
+        name: nginx-guaranteed
+        resources:
+          limits:
+            cpu: 200m
+            memory: 30Mi
+      priorityClassName: high

@@ -1,0 +1,19 @@
+# kubectl run -it --rm alpine --image alpine --generator=run-pod/v1 ash
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-from-ns-alpine-to-nginx
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          ns: network-policy-test
+      podSelector:
+        matchLabels:
+          run: alpine 

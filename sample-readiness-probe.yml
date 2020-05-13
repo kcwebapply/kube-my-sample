@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: readiness-check
+  labels:
+    app: nginx-readiness
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+    readinessProbe:
+      httpGet:
+        port: 80
+        path: /
+      failureThreshold: 1
+      periodSeconds: 1
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: readiness-check-svc
+spec:
+  selector:
+    app: nginx-readiness
+  ports:
+  - port: 80
+
+
+# readinessCheck  =  コンテナのreadyを確認。死んでたらServiceからのルーティングの対象から外す。

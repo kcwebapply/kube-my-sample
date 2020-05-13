@@ -1,0 +1,38 @@
+# Volumeのイメージ https://cstoku.dev/posts/2018/k8sdojo-05/
+apiVersion: v1
+kind: Pod
+metadata:
+  name: date-tail
+spec:
+  containers:
+  - name: date
+    image: alpine
+    command: ["sh", "-c"] # shellを実行。
+    args:
+    - |
+      exec >> /var/log/date-tail/output.log
+      echo -n 'Start at: '
+      while true; do
+        date
+        sleep 1
+      done
+    volumeMounts:
+    - name: log-volume
+      mountPath: /var/log/date-tail
+  - name: tail
+    image: alpine
+    command: ["sh", "-c"]
+    args:
+    - |
+      tail -f /var/log/date-tail/output.log
+    volumeMounts:
+    - name: log-volume
+      mountPath: /var/log/date-tail
+  volumes:
+  - name: log-volume
+    hostPath:
+      path: /data/date-tail
+  terminationGracePeriodSeconds: 0
+
+# volumeMounts.mounthPath = Pod内におけるVolumeのマウント先。ここにデータが格納される。EmptyDirではPodが削除されたらVolumeも削除される。
+# vokumes.hostPath = k8sが実行されているサーバー内(つまりNode内)のマウント先を指定する。 minikubeの/data/date-tail にマウントされた。

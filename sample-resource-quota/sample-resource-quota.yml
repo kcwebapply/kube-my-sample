@@ -1,0 +1,31 @@
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high
+value: 1000000
+globalDefault: false
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: rq-notbesteffort
+spec:
+  hard:
+    cpu: "500m"
+    memory: 128Mi
+  scopeSelector:
+      matchExpressions:
+      - operator : In
+        scopeName: PriorityClass
+        values: ["high","medium"]
+
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: rq-besteffort
+spec:
+  hard:
+    count/pods: "100"
+  scopes:
+  - BestEffort

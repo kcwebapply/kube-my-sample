@@ -1,0 +1,14 @@
+# node-selectorは、Podを特定のNodeにスケジューリングする仕組み。PodのnodeSelectorでその機能を使える。
+apiVersion: v1
+kind: Pod
+metadata:
+  name: node-selector
+spec:
+  containers:
+  - name: nginx
+    image: nginx:alpine
+  nodeSelector:
+    environment: dev
+  terminationGracePeriodSeconds: 0
+
+# nodeにラベル environment = dev　があるとこでのみスケジューリングされる。
